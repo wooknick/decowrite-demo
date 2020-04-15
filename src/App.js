@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import styled, { ThemeProvider } from "styled-components";
+import GlobalStyles from "./Styles/GlobalStyles";
+import Theme from "./Styles/Theme";
+import Router from "./Components/Router";
 
-function App() {
+const Wrapper = styled.div`
+  width: 100vw;
+  max-width: 550px;
+  height: ${(props) => props.innerHeight}px;
+  min-height: 550px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: scroll;
+`;
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={Theme}>
+      <GlobalStyles />
+      <Wrapper>
+        <Router />
+      </Wrapper>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
