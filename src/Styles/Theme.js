@@ -14,4 +14,6 @@ export default {
                border: ${BOX_BORDER};
                background-color: white;
                `,
+  fontEnglish: "font-family: 'Josefin Sans', sans-serif;",
+  fontRoboto: "font-family: 'Roboto', sans-serif;",
 };

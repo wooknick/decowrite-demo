@@ -1,5 +1,5 @@
 export default {
-  title: "운수좋은 날",
+  title: "운수 좋은 날",
   chapter_exist: 0,
   chapter_titles: [],
   data: [

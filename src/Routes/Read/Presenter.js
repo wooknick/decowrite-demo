@@ -1,26 +1,23 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
-import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import ContentCell from "../../Components/ContentCell";
 
 const emotionColor = [
-  ["rgba(242, 216, 179, 0.2)", "rgba(242, 216, 179, 0.4)"],
-  ["rgba(38, 0, 38, 0.15)", "rgba(38, 0, 38, 0.3)"],
+  ["rgba(256, 256, 256, 1)", "rgba(256, 256, 256, 1)"],
+  ["rgba(242, 216, 179, 0)", "rgba(242, 216, 179, 0.3)"],
+  ["rgba(38, 0, 38, 0)", "rgba(38, 0, 38, 0.28)"],
 ];
 
 const breatheColorFrames = (emotion) => keyframes`
     0%{
-      /* background-color: rgba(242,216,179,0.3); */
       background-color: ${emotionColor[emotion][0]};
     }
     50%{
       background-color: ${emotionColor[emotion][1]};
-      /* background-color: rgba(242,216,179,0.5); */
     }
     100%{
       background-color: ${emotionColor[emotion][0]};
-      /* background-color: rgba(242,216,179,0.3); */
     }
 `;
 
@@ -29,14 +26,16 @@ const breatheColor = (props) => css`
 `;
 
 const Wrapper = styled.div`
+  margin: 0 auto;
   width: 100%;
+  max-width: 768px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
 
-  ${(props) => props.emotion > -1 && breatheColor}
+  ${(props) => props.emotion > 0 && breatheColor}
 `;
 
 const Header = styled.div`
@@ -44,25 +43,6 @@ const Header = styled.div`
   height: 100px;
   display: flex;
   align-items: flex-end;
-`;
-
-const ELink = styled(Link)`
-  flex: 0.2;
-  display: flex;
-  justify-content: center;
-`;
-
-const Back = styled.div`
-  width: 50px;
-  height: 50px;
-  font-size: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const fadeInFrames = keyframes`
@@ -82,21 +62,42 @@ const fadeIn = (props) =>
     animation: ${fadeInFrames} 0.3s linear;
   `;
 
+const fadeOutFrames = keyframes`
+0%{
+    opacity: 1;
+    transform: translateY(0px);
+    
+}
+100%{
+    opacity: 0;
+    transform: translateY(-10px);
+}
+`;
+
+const fadeOut = (props) =>
+  css`
+    animation: ${fadeOutFrames} 0.3s linear;
+  `;
+
 const Title = styled.div`
   width: 200px;
   height: 50px;
   font-size: 20px;
-  flex: 0.6;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  ${(props) => props.active && fadeIn}
+  margin: 0 auto;
+  opacity: ${(props) => (props.active ? 1 : 0)};
+  ${(props) => (props.active ? fadeIn : fadeOut)}
 `;
 
 const Content = styled.div`
   width: 100%;
+  max-width: 400px;
   height: 60%;
   min-height: 480px;
+  z-index: 5;
 `;
 
 const ESlider = styled(Slider)`
@@ -114,14 +115,21 @@ const Footer = styled.div`
   justify-content: space-between;
 `;
 
-const Pages = styled.div`
+const PageNumber = styled.div`
   display: flex;
   justify-content: center;
+  margin: 0 auto;
+  opacity: ${(props) => (props.active ? 1 : 0)};
+  ${(props) => (props.active ? fadeIn : fadeOut)}
 `;
 
 const PageMoveTo = styled.div`
-  width: 80px;
-  height: 100%;
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+  ${(props) => props.to === "prev" && "left:0;"}
+  ${(props) => props.to === "next" && "right:0;"}
   &:hover {
     cursor: pointer;
   }
@@ -129,6 +137,9 @@ const PageMoveTo = styled.div`
 
 const Presenter = ({ title, pages, emotions }) => {
   const [page, setPage] = useState(0);
+  const [beforePage, setBeforePage] = useState(0);
+  const [emotion, setEmotion] = useState(0);
+  const [beforeEmotion, setBeforeEmotion] = useState(0);
   const sliderRef = useRef();
 
   const settings = {
@@ -143,48 +154,48 @@ const Presenter = ({ title, pages, emotions }) => {
     swipeToSlide: true,
     touchThreshold: 5,
     afterChange: (index) => {
-      console.log("Hi");
+      setBeforePage(page);
+      setPage(index);
+      setBeforeEmotion(emotion);
+      setEmotion(emotions[index]);
     },
   };
 
   return (
-    <Wrapper emotion={1}>
+    <Wrapper emotion={emotion}>
       <Header>
-        <ELink to="/lists">
-          <Back>
-            <i className="fas fa-caret-left"></i>
-          </Back>
-        </ELink>
-        <Title active={page > 0}>{page > 0 && <span>{title}</span>}</Title>
+        <Title active={page > 0}>
+          {(page !== 0 || beforePage !== 0) && <span>{title}</span>}
+        </Title>
       </Header>
       <Content>
         <ESlider ref={sliderRef} {...settings}>
-          <ContentCell text={title} type={"cover"} />
-
-          {pages.map((content, i) => {
-            return <ContentCell key={i} text={content.text} />;
+          {pages.map((page, i) => {
+            return <ContentCell key={i} text={page.text} type={page.type} />;
           })}
         </ESlider>
       </Content>
       <Footer>
-        <PageMoveTo
-          onClick={() => {
-            sliderRef.current.slickPrev();
-          }}
-        />
-        <Pages>
-          {page > 0 && (
+        <PageNumber active={page > 0}>
+          {(page !== 0 || beforePage !== 0) && (
             <span>
-              {page} / {pages.length + 1}
+              {page} / {pages.length - 1}
             </span>
           )}
-        </Pages>
-        <PageMoveTo
-          onClick={() => {
-            sliderRef.current.slickNext();
-          }}
-        />
+        </PageNumber>
       </Footer>
+      <PageMoveTo
+        to="prev"
+        onClick={() => {
+          sliderRef.current.slickPrev();
+        }}
+      />
+      <PageMoveTo
+        to="next"
+        onClick={() => {
+          sliderRef.current.slickNext();
+        }}
+      />
     </Wrapper>
   );
 };

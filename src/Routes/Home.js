@@ -5,15 +5,15 @@ import LogoImg from "../Images/logo.png";
 import routesName from "../routesName";
 
 const Wrapper = styled.div`
+  background-color: white;
   width: 100%;
   height: 100%;
-  min-height: 667px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding-top: 25vh;
-  padding-bottom: 50px;
+  padding-top: 20vh;
+  padding-bottom: 20vh;
   color: ${(props) => props.theme.darkBlue};
 `;
 
@@ -63,6 +63,7 @@ const Gate = styled.div`
   &:hover {
     cursor: pointer;
   }
+  ${(props) => props.theme.fontEnglish}
 `;
 
 const Home = () => {

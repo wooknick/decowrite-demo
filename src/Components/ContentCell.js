@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Typed from "react-typed";
 
 const Wrapper = styled.div`
   min-width: 400px;
@@ -30,17 +31,20 @@ const CoverCell = styled.div`
 
 const IndexCell = styled.div`
   width: 100%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   span {
+    ${(props) => props.theme.fontRoboto}
     &:first-child {
-      font-size: 25px;
+      font-size: 18px;
       font-weight: bold;
       margin-bottom: 40px;
     }
     &:not(:first-child) {
+      font-size: 16px;
       margin-bottom: 20px;
     }
   }
@@ -63,11 +67,11 @@ const ChapCover = styled.div`
   }
 `;
 
-const ContentCell = ({ text, type = "default", chap_num }) => {
+const ContentCell = ({ text, type }) => {
   // default: 기본 셀, cover: 표지, index: 목차, chapCover: 챕터표지
-  if (type === "default") {
+  if (type === "content") {
     return (
-      <Wrapper>
+      <Wrapper type={type}>
         <DefaultCell>
           <span>{text}</span>
         </DefaultCell>
@@ -75,17 +79,17 @@ const ContentCell = ({ text, type = "default", chap_num }) => {
     );
   } else if (type === "cover") {
     return (
-      <Wrapper>
+      <Wrapper type={type}>
         <CoverCell>
-          <span>{text}</span>
+          <Typed strings={[text]} typeSpeed={80} startDelay={1000} />
         </CoverCell>
       </Wrapper>
     );
   } else if (type === "index") {
     return (
-      <Wrapper>
+      <Wrapper type={type}>
         <IndexCell>
-          <span>INDEX</span>
+          <span>{`__들어가기__`}</span>
           {text.map((item, i) => {
             return <span key={i}>{item}</span>;
           })}
@@ -94,10 +98,10 @@ const ContentCell = ({ text, type = "default", chap_num }) => {
     );
   } else if (type === "chapCover") {
     return (
-      <Wrapper>
+      <Wrapper type={type}>
         <ChapCover>
-          <span>Chap {chap_num}</span>
-          <span>{text}</span>
+          <span>Chap {text[0]}</span>
+          <span>{text[1]}</span>
         </ChapCover>
       </Wrapper>
     );
