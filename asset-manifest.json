@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/decowrite-demo/static/css/main.b9786af2.chunk.css",
+    "main.js": "/decowrite-demo/static/js/main.eb946f2c.chunk.js",
+    "main.js.map": "/decowrite-demo/static/js/main.eb946f2c.chunk.js.map",
+    "runtime-main.js": "/decowrite-demo/static/js/runtime-main.8d23581a.js",
+    "runtime-main.js.map": "/decowrite-demo/static/js/runtime-main.8d23581a.js.map",
+    "static/css/2.f5298653.chunk.css": "/decowrite-demo/static/css/2.f5298653.chunk.css",
+    "static/js/2.b133712a.chunk.js": "/decowrite-demo/static/js/2.b133712a.chunk.js",
+    "static/js/2.b133712a.chunk.js.map": "/decowrite-demo/static/js/2.b133712a.chunk.js.map",
+    "index.html": "/decowrite-demo/index.html",
+    "precache-manifest.01ad3a3af19ca4fda154da83d2668728.js": "/decowrite-demo/precache-manifest.01ad3a3af19ca4fda154da83d2668728.js",
+    "service-worker.js": "/decowrite-demo/service-worker.js",
+    "static/css/2.f5298653.chunk.css.map": "/decowrite-demo/static/css/2.f5298653.chunk.css.map",
+    "static/css/main.b9786af2.chunk.css.map": "/decowrite-demo/static/css/main.b9786af2.chunk.css.map",
+    "static/js/2.b133712a.chunk.js.LICENSE.txt": "/decowrite-demo/static/js/2.b133712a.chunk.js.LICENSE.txt",
+    "static/media/logo.png": "/decowrite-demo/static/media/logo.5f08f7af.png",
+    "static/media/mobile-phone.svg": "/decowrite-demo/static/media/mobile-phone.1a63e8a3.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8d23581a.js",
+    "static/css/2.f5298653.chunk.css",
+    "static/js/2.b133712a.chunk.js",
+    "static/css/main.b9786af2.chunk.css",
+    "static/js/main.eb946f2c.chunk.js"
+  ]
+}
