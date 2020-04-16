@@ -3,34 +3,13 @@ import styled, { keyframes, css } from "styled-components";
 import Slider from "react-slick";
 import ContentCell from "../../Components/ContentCell";
 import "./Read.css";
+import nf from "../../notesFrequency";
 
 const EMOTION_NAME = {
   0: "neutral",
   1: "happy",
   2: "hate",
 };
-
-const emotionColor = [
-  ["rgba(256, 256, 256, 1)", "rgba(256, 256, 256, 1)"],
-  ["rgba(242, 216, 179, 0)", "rgba(242, 216, 179, 0.3)"],
-  ["rgba(38, 0, 38, 0)", "rgba(38, 0, 38, 0.28)"],
-];
-
-const breatheColorFrames = (emotion) => keyframes`
-    0%{
-      background-color: ${emotionColor[emotion][0]};
-    }
-    50%{
-      background-color: ${emotionColor[emotion][1]};
-    }
-    100%{
-      background-color: ${emotionColor[emotion][0]};
-    }
-`;
-
-const breatheColor = (props) => css`
-  /* animation: ${breatheColorFrames(props.emotion)} 3s linear infinite; */
-`;
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -41,8 +20,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-
-  ${(props) => props.emotion > 0 && breatheColor}
 `;
 
 const Header = styled.div`
@@ -142,11 +119,14 @@ const PageMoveTo = styled.div`
   }
 `;
 
-const Presenter = ({ title, pages, emotions }) => {
+const Presenter = ({ title, pages, emotions, tone }) => {
   const [page, setPage] = useState(0);
   const [beforePage, setBeforePage] = useState(0);
   const [emotion, setEmotion] = useState(0);
   const [emotionClass, setEmotionClass] = useState(EMOTION_NAME[0]);
+  const [soundStatus, setSoundStatus] = useState("stop");
+  const [intervalId, setIntervalId] = useState(0);
+  const [timeoutIds, setTimeoutIds] = useState([]);
 
   const sliderRef = useRef();
 
@@ -165,6 +145,45 @@ const Presenter = ({ title, pages, emotions }) => {
     return () => clearInterval(t);
   }, [emotionClass]);
 
+  const makeSound = (time, interval, melody) => {
+    let tick = interval;
+    melody.forEach((note) => {
+      let t = setTimeout(() => {
+        tone.trigger(nf[note], time);
+      }, tick);
+      tick += interval;
+      setTimeoutIds((v) => [...v, t]);
+    });
+    tick = interval;
+    let t = setInterval(() => {
+      melody.forEach((note) => {
+        let t = setTimeout(() => {
+          tone.trigger(nf[note], time);
+        }, tick);
+        tick += interval;
+        setTimeoutIds((v) => [...v, t]);
+      });
+    });
+    setIntervalId(t);
+  };
+
+  const playSound = () => {
+    if (soundStatus === "stop") {
+      setSoundStatus("play");
+      makeSound("0.34", 700, ["E4", "A4", "C5", "A4", "D#4", "A4", "B4", "A4"]);
+    }
+  };
+
+  const stopSound = () => {
+    if (soundStatus === "play") {
+      clearInterval(intervalId);
+      timeoutIds.forEach((id) => {
+        clearTimeout(id);
+      });
+      setSoundStatus("stop");
+    }
+  };
+
   const settings = {
     dots: false,
     infinite: false,
@@ -182,6 +201,11 @@ const Presenter = ({ title, pages, emotions }) => {
       if (emotion !== emotions[index]) {
         setEmotion(emotions[index]);
         setEmotionClass(EMOTION_NAME[emotions[index]]);
+      }
+      if (emotions[index] !== 0) {
+        playSound();
+      } else {
+        stopSound();
       }
     },
   };
