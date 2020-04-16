@@ -1,7 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Slider from "react-slick";
 import ContentCell from "../../Components/ContentCell";
+import "./Read.css";
+
+const EMOTION_NAME = {
+  0: "neutral",
+  1: "happy",
+  2: "hate",
+};
 
 const emotionColor = [
   ["rgba(256, 256, 256, 1)", "rgba(256, 256, 256, 1)"],
@@ -22,7 +29,7 @@ const breatheColorFrames = (emotion) => keyframes`
 `;
 
 const breatheColor = (props) => css`
-  animation: ${breatheColorFrames(props.emotion)} 3s linear infinite;
+  /* animation: ${breatheColorFrames(props.emotion)} 3s linear infinite; */
 `;
 
 const Wrapper = styled.div`
@@ -139,8 +146,24 @@ const Presenter = ({ title, pages, emotions }) => {
   const [page, setPage] = useState(0);
   const [beforePage, setBeforePage] = useState(0);
   const [emotion, setEmotion] = useState(0);
-  const [beforeEmotion, setBeforeEmotion] = useState(0);
+  const [emotionClass, setEmotionClass] = useState(EMOTION_NAME[0]);
+
   const sliderRef = useRef();
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (emotionClass === "happy") {
+        setEmotionClass("happy-breathe");
+      } else if (emotionClass === "happy-breathe") {
+        setEmotionClass("happy");
+      } else if (emotionClass === "hate") {
+        setEmotionClass("hate-breathe");
+      } else if (emotionClass === "hate-breathe") {
+        setEmotionClass("hate");
+      }
+    }, 2000);
+    return () => clearInterval(t);
+  }, [emotionClass]);
 
   const settings = {
     dots: false,
@@ -156,13 +179,15 @@ const Presenter = ({ title, pages, emotions }) => {
     afterChange: (index) => {
       setBeforePage(page);
       setPage(index);
-      setBeforeEmotion(emotion);
-      setEmotion(emotions[index]);
+      if (emotion !== emotions[index]) {
+        setEmotion(emotions[index]);
+        setEmotionClass(EMOTION_NAME[emotions[index]]);
+      }
     },
   };
 
   return (
-    <Wrapper emotion={emotion}>
+    <Wrapper emotion={emotion} className={emotionClass}>
       <Header>
         <Title active={page > 0}>
           {(page !== 0 || beforePage !== 0) && <span>{title}</span>}

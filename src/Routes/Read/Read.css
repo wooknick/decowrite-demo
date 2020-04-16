@@ -1,0 +1,20 @@
+.neutral {
+  background-color: white;
+  transition: 2s background-color ease;
+}
+.happy {
+  background-color: rgba(242, 216, 179, 0.7);
+  transition: 2s background-color ease;
+}
+.happy-breathe {
+  background-color: rgba(242, 216, 179, 1);
+  transition: 2s background-color ease;
+}
+.hate {
+  background-color: rgba(38, 0, 38, 0.3);
+  transition: 2s background-color ease;
+}
+.hate-breathe {
+  background-color: rgba(38, 0, 38, 0.4);
+  transition: 2s background-color ease;
+}
